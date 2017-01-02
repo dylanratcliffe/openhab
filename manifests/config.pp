@@ -4,6 +4,8 @@ class openhab::config {
     provider => 'git',
     source   => 'https://github.com/dylanratcliffe/openhab.git',
     revision => 'master',
+    owner    => 'openhab',
+    group    => 'openhab',
     require  => Class['openhab::install'],
   }
 }

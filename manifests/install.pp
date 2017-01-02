@@ -23,8 +23,8 @@ class openhab::install {
     extract_path  => $openhab::install_path,
     creates       => "${openhab::install_path}/userdata",
     cleanup       => true,
-    # user          => 'openhab',
-    # group         => 'openhab',
+    user          => 'openhab',
+    group         => 'openhab',
     require       => [User['openhab'],Group['openhab']],
   }
 

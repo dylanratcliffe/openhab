@@ -11,7 +11,7 @@ User=openhab
 ExecStart=/opt/openhab/start.sh
 ExecStop=kill -SIGINT $MAINPID
 Restart=on-failure
-WorkingDirectory=/opt/openhab2
+WorkingDirectory=/opt/openhab
 
 [Install]
 WantedBy=multi-user.target
