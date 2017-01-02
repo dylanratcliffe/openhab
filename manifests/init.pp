@@ -7,6 +7,7 @@ class openhab (
   anchor { 'openhab_end': }
 
   include openhab::install
+  include openhab::config
 
   include nginx
 
