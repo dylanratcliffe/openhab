@@ -17,7 +17,7 @@ class openhab::install {
   archive { 'openhab_install':
     path          => '/tmp/openhab.zip',
     source        => 'https://openhab.ci.cloudbees.com/job/openHAB-Distribution/lastSuccessfulBuild/artifact/distributions/openhab-online/target/openhab-online-2.0.0-SNAPSHOT.zip',
-    checksum      => 'f49f7b89a59956f161b851eb3772e66f',
+    checksum      => '761181c9d1be5d91bea03ba4e9be33b0',
     checksum_type => 'md5',
     extract       => true,
     extract_path  => $openhab::install_path,
