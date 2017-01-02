@@ -3,34 +3,52 @@ class openhab::install {
     distribution          => 'jdk',
     package               => 'oracle-java8-jdk',
     java_alternative      => 'jdk-8-oracle-arm-vfp-hflt',
-    java_alternative_path => '/usr/lib/jvm/jdk-8-oracle-arm-vfp-hflt/jre/bin/java',
+    java_alternative_path => '/usr/lib/jvm/jdk-8-oracle-arm32-vfp-hflt/jre/bin/java',
   }
 
-  include apt
-
-  apt::source { 'openhab':
-    location => 'http://dl.bintray.com/openhab/apt-repo',
-    release  => $openhab::version,
-    repos    => 'main',
-    key      => 'EDB7D0304E2FCAF629DF1163075721F6A224060A',
+  file { '/opt/openhab':
+    ensure => 'directory',
+    owner  => 'openhab',
+    group  => 'openhab',
+    mode   => '0755',
+    before => Archive['openhab_install'],
   }
 
-  package { 'openhab-runtime':
-    ensure  => $openhab::ensure,
-    require => Apt::Source['openhab'],
-    notify  => Service['openhab'],
+  archive { 'openhab_install':
+    path          => '/tmp/openhab.zip',
+    source        => 'https://openhab.ci.cloudbees.com/job/openHAB-Distribution/lastSuccessfulBuild/artifact/distributions/openhab-online/target/openhab-online-2.0.0-SNAPSHOT.zip',
+    checksum      => 'f49f7b89a59956f161b851eb3772e66f',
+    checksum_type => 'md5',
+    extract       => true,
+    extract_path  => $openhab::install_path,
+    creates       => "${openhab::install_path}/userdata",
+    cleanup       => true,
+    # user          => 'openhab',
+    # group         => 'openhab',
+    require       => [User['openhab'],Group['openhab']],
   }
 
   user { 'openhab':
-    ensure  => present,
-    groups  => [ 'dialout' ],
-    require => Package['openhab-runtime'],
+    ensure => present,
+  }
+
+  group { 'openhab':
+    ensure => present,
+  }
+
+  file { 'openhab_systemd':
+    ensure => 'file',
+    path   => '/lib/systemd/system/openhab.service',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+    source => 'puppet:///modules/openhab/openhab.service',
+    notify => Service['openhab'],
   }
 
   service { 'openhab':
-    ensure  => running,
-    enable  => true,
-    require => Package['openhab-runtime']
+    ensure  => 'running',
+    require => [User['openhab'],Archive['openhab_install']],
   }
 
 }
