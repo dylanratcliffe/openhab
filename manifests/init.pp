@@ -23,4 +23,11 @@ class openhab (
   }
 
   include openhab::motd
+
+  Anchor['openhab_start'] ->
+  Class['openhab::install'] ->
+  Class['openhab::plugins::connectsdk'] ->
+  Class['openhab::config'] ->
+  Class['nginx'] ->
+  Anchor['openhab_end']
 }
